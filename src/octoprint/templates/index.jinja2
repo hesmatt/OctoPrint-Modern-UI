@@ -1,45 +1,38 @@
 <!DOCTYPE html>
-<html>
-    <head>
-        <title data-bind="text: title">OctoPrint</title>
+<html lang="en" class="light-style layout-menu-fixed" dir="ltr" data-theme="theme-default">
+<head>
+    <meta charset="utf-8"/>
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0"/>
+    <title>OctoPrint</title>
 
-        <link rel="manifest" href="{{ url_for('static', filename='manifest.json') }}">
-        <link rel="shortcut icon" href="{{ url_for('static', filename='img/tentacle-32x32.png') }}">
-        <link rel="mask-icon" href="{{ url_for('static', filename='img/mask.svg') }}" color="#56BE37">
-        <link rel="mask-icon-theme" href="{{ url_for('static', filename='img/mask-theme.svg') }}" color="#56BE37">
-        <link rel="apple-touch-icon" sizes="114x114" href="{{ url_for('static', filename='img/apple-touch-icon-114x114.png') }}">
-        <link rel="apple-touch-icon" sizes="144x144" href="{{ url_for('static', filename='img/apple-touch-icon-144x144.png') }}">
+    <link rel="manifest" href="{{ url_for('static', filename='manifest.json') }}">
+    <link rel="shortcut icon" href="{{ url_for('static', filename='img/tentacle-32x32.png') }}">
+    <link rel="mask-icon" href="{{ url_for('static', filename='img/mask.svg') }}" color="#56BE37">
+    <link rel="mask-icon-theme" href="{{ url_for('static', filename='img/mask-theme.svg') }}" color="#56BE37">
+    <link rel="apple-touch-icon" sizes="114x114" href="{{ url_for('static', filename='img/apple-touch-icon-114x114.png') }}">
+    <link rel="apple-touch-icon" sizes="144x144" href="{{ url_for('static', filename='img/apple-touch-icon-144x144.png') }}">
 
-        <meta name="robots" content="noindex, nofollow, noimageindex">
-        <meta name="referrer" content="no-referrer">
-        <meta name="theme-color" data-bind="attr: { content: theme_color }">
+    <link rel="preconnect" href="https://fonts.googleapis.com"/>
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+    <link href="https://fonts.googleapis.com/css2?family=Public+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500;1,600;1,700&display=swap"
+          rel="stylesheet"/>
+    <link rel="stylesheet" href="/static/vendor/fonts/boxicons.css"/>
+    <link rel="stylesheet" href="/static/vendor/css/core.css"/>
+    <link rel="stylesheet" href="/static/vendor/css/theme-default.css"/>
+    <link rel="stylesheet" href="/static/css/demo.css"/>
+    <link rel="stylesheet" href="/static/vendor/libs/perfect-scrollbar/perfect-scrollbar.css"/>
+    <link rel="stylesheet" href="/static/vendor/libs/apex-charts/apex-charts.css"/>
 
-        {% include 'javascripts-preload.jinja2' %}
-        {% include 'stylesheets-preload.jinja2' %}
-        {% include 'initscript.jinja2' %}
-    </head>
-    <body>
-        <noscript>
-            <style type="text/css">
-                #page-container-main,
-                #page-container-loading {
-                    display:none;
-                }
-            </style>
-            <div id="page-container-noscript">
-                <div class="wrapper">
-                    <div class="outer">
-                        <div class="inner">
-                            <div class="content">
-                                <h1 class="text-error">{{ _('You don\'t seem to have JavaScript enabled') }}</h1>
-                                {{ _('OctoPrint\'s UI requires JavaScript to work. Please enable JavaScript and reload.') }}
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </noscript>
+    <script src="/static/vendor/js/helpers.js"></script>
 
+    {% include 'javascripts-preload.jinja2' %}
+    {% include 'initscript.jinja2' %}
+</head>
+
+<body>
+<div class="layout-wrapper layout-content-navbar">
+    <div class="layout-container">
         {% if enableLoadingAnimation %}
         <div id="page-container-loading" style="display: none" data-bind="visible: loading">
             <div class="wrapper">
@@ -56,133 +49,314 @@
         </div>
         {% endif %}
 
-        <div class="page-container" id="page-container-main" {% if enableLoadingAnimation %}style="display: none"{% endif %} data-bind="visible: visible">
-            <!-- ko allowBindings: false -->
-            <div id="navbar" class="navbar navbar-static-top">
-                <div class="navbar-inner" data-bind="css: appearanceClasses">
-                    <div class="container">
-                        <a class="brand" href="javascript:void(0)" data-bind="attr: {title: appearance.fullbrand}"><span data-bind="text: appearance.brand">OctoPrint</span></a>
-                        <div class="nav-collapse">
-                            <!-- Navbar -->
-                            <ul class="nav pull-right">
-                                {% for key in templates.navbar.order %}
-                                    {% set data = templates.navbar.entries[key] %}
-                                    {% if "custom_bindings" not in data or data["custom_bindings"] %}<!-- ko allowBindings: false -->{% endif %}
-                                    <li id="{{ data._div }}"
-                                        {% if "data_bind" in data %}data-bind="{{ data.data_bind }}"{% endif %}
-                                        {% if "classes" in data %}class="{{ data.classes|join(' ') }}"{% endif %}
-                                        {% if "styles" in data %}style="{{ data.styles|join(', ') }}"{% endif %}
-                                            >
-                                        {% try "There was an error with the template {filename} at line number {lineno}: {exception}" %}{% include data.template ignore missing %}{% endtry %}
-                                    </li>
-                                    {% if "custom_bindings" not in data or data["custom_bindings"] %}<!-- /ko -->{% endif %}
-                                {% endfor %}
-                            </ul>
-                        </div>
+        <aside id="layout-menu" class="layout-menu menu-vertical menu bg-menu-theme">
+            <div class="app-brand demo">
+                <a href="index.html" class="app-brand-link">
+              <span class="app-brand-logo demo">
+                  <img src="/static/img/tentacle-20x20.png" alt="">
+              </span>
+                    <span class="app-brand-text demo menu-text fw-bolder ms-2">
+                        OctoPrint
+                    </span>
+                </a>
+
+                <a href="javascript:void(0);" class="layout-menu-toggle menu-link text-large ms-auto d-block d-xl-none">
+                    <i class="bx bx-chevron-left bx-sm align-middle"></i>
+                </a>
+            </div>
+
+            <div class="menu-inner-shadow"></div>
+
+            <ul class="menu-inner py-1">
+                <!-- Dashboard -->
+                <li class="menu-item active">
+                    <a href="javascript:void(0)" class="menu-link" data-target-page-view="dashboard-page-view">
+                        <i class="menu-icon tf-icons bx bx-home-circle"></i>
+                        <div>Dashboard</div>
+                    </a>
+                </li>
+                <li class="menu-item">
+                    <a href="javascript:void(0)" class="menu-link" data-target-page-view="controls-page-view">
+                        <i class="menu-icon tf-icons bx bx-move"></i>
+                        <div>Controls</div>
+                    </a>
+                </li>
+
+                <!-- Layouts -->
+                <li class="menu-item">
+                    <a href="javascript:void(0);" class="menu-link menu-toggle">
+                        <i class="menu-icon tf-icons bx bx-layout"></i>
+                        <div data-i18n="Layouts">Layouts</div>
+                    </a>
+
+                    <ul class="menu-sub">
+                        <li class="menu-item">
+                            <a href="layouts-without-menu.html" class="menu-link">
+                                <div data-i18n="Without menu">Without menu</div>
+                            </a>
+                        </li>
+                        <li class="menu-item">
+                            <a href="layouts-without-navbar.html" class="menu-link">
+                                <div data-i18n="Without navbar">Without navbar</div>
+                            </a>
+                        </li>
+                        <li class="menu-item">
+                            <a href="layouts-container.html" class="menu-link">
+                                <div data-i18n="Container">Container</div>
+                            </a>
+                        </li>
+                        <li class="menu-item">
+                            <a href="layouts-fluid.html" class="menu-link">
+                                <div data-i18n="Fluid">Fluid</div>
+                            </a>
+                        </li>
+                        <li class="menu-item">
+                            <a href="layouts-blank.html" class="menu-link">
+                                <div data-i18n="Blank">Blank</div>
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+                <li class="menu-header small text-uppercase">
+                    <span class="menu-header-text">Settings</span>
+                </li>
+                <li class="menu-item">
+                    <a href="javascript:void(0)" data-target-page-view="connection-page-view" class="menu-link">
+                        <i class="menu-icon tf-icons bx bx-network-chart"></i>
+                        <div data-i18n="Support">Connection</div>
+                    </a>
+                </li>
+                <li class="menu-item">
+                    <a href="javascript:void(0)" class="menu-link">
+                        <i class="menu-icon tf-icons bx bx-window-open"></i>
+                        <div data-i18n="Support">Switch back to old UI</div>
+                    </a>
+                </li>
+            </ul>
+        </aside>
+
+        <div class="layout-page">
+            <nav class="layout-navbar container-xxl navbar navbar-expand-xl navbar-detached align-items-center bg-navbar-theme">
+                <div class="layout-menu-toggle navbar-nav align-items-xl-center me-3 me-xl-0 d-xl-none">
+                    <a class="nav-item nav-link px-0 me-xl-4" href="javascript:void(0)">
+                        <i class="bx bx-menu bx-sm"></i>
+                    </a>
+                </div>
+
+                <div class="navbar-nav-right d-flex align-items-center ms-auto">
+                    Dashboard
+                </div>
+
+                <div class="navbar-nav-left d-flex align-items-center ms-auto">
+                    <div class="me-2">
+                        <button type="button" class="btn btn-primary">Pause</button>
+                    </div>
+                    <div>
+                        <button type="button" class="btn btn-danger">Stop</button>
                     </div>
                 </div>
-            </div>
-            <div class="container octoprint-container">
-                <div class="row">
-                    <!-- Sidebar -->
-                    {% if templates.sidebar.order %}
-                    <div id="sidebar" class="accordion {% if templates.tab.order %}span4{% else %}span12{% endif %}">
-                        {% for key in templates.sidebar.order %}
-                            {% set entry, data = templates.sidebar.entries[key] %}
-                            {% if "custom_bindings" not in data or data["custom_bindings"] %}<!-- ko allowBindings: false -->{% endif %}
-                            <div id="{{ data._div }}_wrapper"
-                                 class="accordion-group {% if "classes_wrapper" in data %}{{ data.classes_wrapper|join(' ') }}{% elif "classes" in data %}{{ data.classes|join(' ') }}{% endif %}"
-                                 {% if "data_bind" in data %}data-bind="{{ data.data_bind }}"{% endif %}
-                                 {% if "styles_wrapper" in data %} style="{{ data.styles_wrapper|join(', ') }}" {% elif "styles" in data %} style="{{ data.styles|join(', ') }}" {% endif %}
-                                    >
-                                <div class="accordion-heading">
-                                    <a class="accordion-toggle" data-toggle="collapse" data-test-id="sidebar-{{ data._div }}-toggle" data-target="#{{ data._div }}">
-                                        {% if "icon" in data %}<i class="fa icon-black fa-{{ data.icon }}"></i> {% endif %}{{ entry|e }} <!-- TODO fontawesom 5 upgrade - note this may not be possible for back-compat reasons - for 2.0.0? -->
-                                    </a>
-                                    {% if "template_header" in data %}
-                                        {% try "There was an error with the template {filename} at line number {lineno}: {exception}" %}{% include data.template_header ignore missing %}{% endtry %}
-                                    {% endif %}
-                                </div>
-                                <div id="{{ data._div }}"
-                                     class="accordion-body collapse in {% if "classes_content" in data %}{{ data.classes_content|join(' ') }}{% elif "classes" in data %}{{ data.classes|join(' ') }}{% endif %}"
-                                     {% if "styles_content" in data %} style="{{ data.styles_content|join(', ') }}" {% elif "styles" in data %} style="{{ data.styles|join(', ') }}"{% endif %}
-                                        >
-                                    <div class="accordion-inner" data-test-id="sidebar-{{ data._div }}-content">
-                                        {% try "There was an error with the template {filename} at line number {lineno}: {exception}" %}{% include data.template ignore missing %}{% endtry %}
+            </nav>
+
+            <div class="dashboard-page-view active-view" style="display:block;">
+                <div class="content-wrapper">
+                    <div class="container-xxl flex-grow-1 container-p-y">
+                        <div class="row">
+                            <div class="col-lg-3 mb-4 order-0">
+                                <div class="card mb-4">
+                                    <div class="card-body">
+                                        <h5 class="card-title fw-bold">Current status</h5>
+                                        <div class="card-text">
+                                            <div>
+                                                The printer is currently <span style="color:red;">offline</span>
+                                            </div>
+                                            <div class="mt-3">
+                                                megalodon.gcode
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
-                            {% if "custom_bindings" not in data or data["custom_bindings"] %}<!-- /ko -->{% endif %}
-                        {% endfor %}
-                    </div>
-                    {% endif %}
-
-                    <!-- Tabs -->
-                    {% if templates.tab.order %}
-                    <div class="tabbable {% if templates.sidebar.order %}span8{% else %}span12{% endif %}">
-                        <ul class="nav nav-tabs" id="tabs">
-                            {% for key in templates.tab.order %}
-                                {% set entry, data = templates.tab.entries[key] %}
-                                {% if "custom_bindings" not in data or data["custom_bindings"] %}<!-- ko allowBindings: false -->{% endif %}
-                                <li id="{{ data._div }}_link"
-                                    class="{% if "classes_link" in data %}{{ data.classes_link|join(' ') }}{% elif "classes" in data %}{{ data.classes|join(' ') }}{% endif %}"
-                                    {% if "data_bind" in data %}data-bind="{{ data.data_bind }}"{% endif %}
-                                    {% if "styles_link" in data %} style="{{ data.styles_link|join(', ') }}" {% elif "styles" in data %} style="{{ data.styles|join(', ') }}" {% endif %}
-                                        >
-                                        <a href="#{{ data._div }}" data-toggle="tab">{{ entry|e }}</a>
-                                </li>
-                                {% if "custom_bindings" not in data or data["custom_bindings"] %}<!-- /ko -->{% endif %}
-                            {% endfor %}
-                        </ul>
-
-                        <div id="tabs_content" class="tab-content">
-                            {% for key in templates.tab.order %}
-                                {% set entry, data = templates.tab.entries[key] %}
-                                {% if "custom_bindings" not in data or data["custom_bindings"] %}<!-- ko allowBindings: false -->{% endif %}
-                                <div id="{{ data._div }}"
-                                     class="tab-pane{% if loop.first %} active{% endif %}{% if "additional_classes" in data %} {{ data.additional_classes|join(' ') }}{% endif %}"
-                                     {% if "data_bind" in data %}data-bind="{{ data.data_bind }}"{% endif %}
-                                     {% if "styles_content" in data %} style="{{ data.styles_content|join(', ') }}" {% elif "styles" in data %} style="{{ data.styles|join(', ') }}" {% endif %}
-                                        >
-                                            {% try "There was an error with the template {filename} at line number {lineno}: {exception}" %}{% include data.template ignore missing %}{% endtry %}
+                            <div class="col-lg-5 mb-4 order-0">
+                                <div class="card mb-4">
+                                    <div class="card-body">
+                                        <h5 class="card-title fw-bold">Printing statistics</h5>
+                                        <div class="card-text">
+                                            <div>
+                                                <h5 class="small fw-bold mb-0">
+                                                    Approx. Total Print Time:
+                                                </h5>
+                                                <div class="mt-1 mb-3">
+                                                    Not calculated...
+                                                </div>
+                                            </div>
+                                            <div>
+                                                <h5 class="small fw-bold mb-0">
+                                                    Print Time: -
+                                                </h5>
+                                                <div class="mt-1 mb-3">
+                                                    Not calculated...
+                                                </div>
+                                            </div>
+                                            <div>
+                                                <h5 class="small fw-bold mb-0">
+                                                    Print Time Left: -
+                                                </h5>
+                                                <div class="mt-1 mb-3">
+                                                    Not calculated...
+                                                </div>
+                                            </div>
+                                            <div>
+                                                <h5 class="small fw-bold mb-0">
+                                                    Printed
+                                                </h5>
+                                                <div class="mt-1">
+                                                    Not calculated...
+                                                </div>
+                                                <div class="mt-1">
+                                                    <div class="progress">
+                                                        <div class="progress-bar" role="progressbar" style="width: 0%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100"></div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
-                                {% if "custom_bindings" not in data or data["custom_bindings"] %}<!-- /ko -->{% endif %}
-                            {% endfor %}
+                            </div>
                         </div>
                     </div>
-                    {% endif %}
                 </div>
-                {%  include 'footer.jinja2' %}
             </div>
 
-            <!-- Dialogs -->
-            {% include 'dialogs/settings.jinja2' %}
-            {% include 'dialogs/slicing.jinja2' %}
-            {% include 'dialogs/usersettings.jinja2' %}
-            {% include 'dialogs/wizard.jinja2' %}
-            {% include 'dialogs/about.jinja2' %}
-            {% include 'dialogs/files.jinja2' %}
-            {% include 'dialogs/temperature.jinja2' %}
-            {% include 'dialogs/timelapse.jinja2' %}
-            <!-- End of dialogs -->
+            <div class="controls-page-view" style="display:none;">
+                <div class="content-wrapper">
+                    <div class="container-xxl flex-grow-1 container-p-y">
+                        <div class="row">
+                            <div class="col-lg-12 mb-4 order-0">
+                                <div class="card mb-4">
+                                    <div class="card-body">
+                                        <h5 class="card-title fw-bold">X/Y/Z Controls</h5>
+                                        <div class="card-text">
+                                            <div>
+                                                asd
+                                            </div>
+                                            <div class="mt-3">
+                                                asd
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
 
-            <!-- Overlays -->
-            {% include 'overlays/dragndrop.jinja2' %}
-            {% include 'overlays/offline.jinja2' %}
-            {% include 'overlays/reloadui.jinja2' %}
-            <!-- End of overlays -->
-
-            {% include 'stylesheets.jinja2' %}
-            {% include 'javascripts.jinja2' %}
-
-            <!-- Generic plugin template files -->
-            {% for key in templates.generic.order %}
-                {% set data = templates.generic.entries[key] %}
-                {% try "<!-- There was an error with the template {filename} at line number {lineno}: {exception} -->" %}{% include data.template ignore missing %}{% endtry %}
-            {% endfor %}
-            <!-- End of generic plugin template files -->
-            <!-- /ko -->
+            <div class="connection-page-view" style="display:none;">
+                <div class="content-wrapper">
+                    <div class="container-xxl flex-grow-1 container-p-y">
+                        <div class="row">
+                            <div class="col-lg-12 mb-4 order-0">
+                                <div class="card mb-4">
+                                    <div class="card-body">
+                                        <h5 class="card-title fw-bold">Connection settings</h5>
+                                        <div class="card-text">
+                                            <div class="mb-3">
+                                                <label class="form-label">Serial port</label>
+                                                <select class="form-select" data-bind="options: portOptions, optionsCaption: portCaption, value: selectedPort, css: {disabled: !isErrorOrClosed()}, enable: enablePort()">
+                                                </select>
+                                            </div>
+                                            <div class="mb-3">
+                                                <label class="form-label">Baudrate</label>
+                                                <select class="form-select">
+                                                    <option>Default select</option>
+                                                    <option value="1">One</option>
+                                                    <option value="2">Two</option>
+                                                    <option value="3">Three</option>
+                                                </select>
+                                            </div>
+                                            <div class="mb-3">
+                                                <label class="form-label">Printer Profile</label>
+                                                <select class="form-select">
+                                                    <option>Default select</option>
+                                                    <option value="1">One</option>
+                                                    <option value="2">Two</option>
+                                                    <option value="3">Three</option>
+                                                </select>
+                                            </div>
+                                            <div class="form-check mt-3">
+                                                <input class="form-check-input" type="checkbox">
+                                                <label class="form-check-label">
+                                                    Save connection settings
+                                                </label>
+                                            </div>
+                                            <div class="form-check mt-3">
+                                                <input class="form-check-input" type="checkbox">
+                                                <label class="form-check-label">
+                                                    Auto-connect on server startup
+                                                </label>
+                                            </div>
+                                            <div class="mt-3">
+                                                <button type="button" class="btn btn-dark">Connect</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
+    </div>
 
-    </body>
+    <div class="layout-overlay layout-menu-toggle"></div>
+</div>
+
+
+{% include 'dialogs/settings.jinja2' %}
+{% include 'dialogs/slicing.jinja2' %}
+{% include 'dialogs/usersettings.jinja2' %}
+{% include 'dialogs/wizard.jinja2' %}
+{% include 'dialogs/about.jinja2' %}
+{% include 'dialogs/files.jinja2' %}
+{% include 'dialogs/temperature.jinja2' %}
+{% include 'dialogs/timelapse.jinja2' %}
+<!-- End of dialogs -->
+
+<!-- Overlays -->
+{% include 'overlays/dragndrop.jinja2' %}
+{% include 'overlays/offline.jinja2' %}
+{% include 'overlays/reloadui.jinja2' %}
+<!-- End of overlays -->
+
+{% include 'javascripts.jinja2' %}
+
+<!-- Generic plugin template files -->
+{% for key in templates.generic.order %}
+    {% set data = templates.generic.entries[key] %}
+    {% try "<!-- There was an error with the template {filename} at line number {lineno}: {exception} -->" %}{% include data.template ignore missing %}{% endtry %}
+{% endfor %}
+
+<script>
+    function changePageView() {
+
+    }
+
+    $(document).on('click', '.menu-link', function () {
+        let viewToSwitchTo = ($("." + $(this).data("target-page-view"))),
+            activeMenuItem = $('.menu-item.active'),
+            currentlyActiveView = $('.active-view')
+
+        console.log(currentlyActiveView)
+
+        $(currentlyActiveView).css({"display": "none"})
+        $(currentlyActiveView).removeClass("active-view")
+        $(activeMenuItem).removeClass("active")
+        $(this).parent().addClass("active")
+        $(viewToSwitchTo).css({"display": "block"})
+        $(viewToSwitchTo).addClass("active-view")
+
+    })
+</script>
+</body>
 </html>

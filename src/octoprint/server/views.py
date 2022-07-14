@@ -351,7 +351,9 @@ def index():
         )
     client_refresh = client_refresh and not printing
     force_refresh = (
-        client_refresh or request_refresh or wizard_active(_templates.get(locale))
+        client_refresh or request_refresh or wizard_active(
+        _templates.get(locale)) or request.args.get("newUi") or request.args.get(
+        "force_cache_refresh")
     )
 
     # if we need to refresh our template cache or it's not yet set, process it
@@ -375,15 +377,15 @@ def index():
             return True
 
     default_additional_etag = [
-        enable_timelapse,
-        enable_loading_animation,
-        enable_sd_support,
-        enable_webcam,
-        enable_temperature_graph,
-        sockjs_connect_timeout,
-        connectivityChecker.online,
-        wizard_active(_templates.get(locale)),
-    ] + sorted(
+                                  enable_timelapse,
+                                  enable_loading_animation,
+                                  enable_sd_support,
+                                  enable_webcam,
+                                  enable_temperature_graph,
+                                  sockjs_connect_timeout,
+                                  connectivityChecker.online,
+                                  wizard_active(_templates.get(locale)),
+                              ] + sorted(
         "{}:{}".format(to_unicode(k, errors="replace"), to_unicode(v, errors="replace"))
         for k, v in _plugin_vars.items()
     )
@@ -536,7 +538,8 @@ def index():
             unless_response=lambda response: util.flask.cache_check_response_headers(
                 response
             )
-            or util.flask.cache_check_status_code(response, _valid_status_for_cache),
+                                             or util.flask.cache_check_status_code(
+                response, _valid_status_for_cache),
         )(decorated_view)
         decorated_view = util.flask.with_client_revalidation(decorated_view)
         decorated_view = util.flask.conditional(
@@ -607,7 +610,12 @@ def index():
 
         # no plugin took an interest, we'll use the default UI
         def make_default_ui():
-            r = make_response(render_template("index.jinja2", **render_kwargs))
+            template = "original_index.jinja2"
+
+            if request.args.get("newUi"):
+                template = "index.jinja2"
+
+            r = make_response(render_template(template, **render_kwargs))
             if wizard:
                 # if we have active wizard dialogs, set non caching headers
                 r = util.flask.add_non_caching_response_headers(r)
@@ -616,6 +624,7 @@ def index():
         cached = get_cached_view(
             "_default", make_default_ui, additional_etag=default_additional_etag
         )
+
         preemptively_cached = get_preemptively_cached_view("_default", cached, {}, {})
         return preemptively_cached()
 
@@ -1300,8 +1309,8 @@ def fetch_template_data(refresh=False):
             x
             for x in default_order
             if x not in templates[t]["order"]
-            and x in templates[t]["entries"]
-            and x not in configured_disabled
+               and x in templates[t]["entries"]
+               and x not in configured_disabled
         ]
 
         all_ordered = set(templates[t]["order"])
@@ -1310,8 +1319,8 @@ def fetch_template_data(refresh=False):
         # check if anything is missing, if not we are done here
         missing_in_order = (
             set(templates[t]["entries"].keys())
-            .difference(all_ordered)
-            .difference(all_disabled)
+                .difference(all_ordered)
+                .difference(all_disabled)
         )
         if len(missing_in_order) == 0:
             continue
@@ -1642,8 +1651,8 @@ def _compute_date(files):
         # we set the micros to 0 since microseconds are not speced for HTTP
         max_timestamp = (
             datetime.fromtimestamp(max_timestamp)
-            .replace(microsecond=0)
-            .replace(tzinfo=UTC_TZ)
+                .replace(microsecond=0)
+                .replace(tzinfo=UTC_TZ)
         )
     return max_timestamp
 

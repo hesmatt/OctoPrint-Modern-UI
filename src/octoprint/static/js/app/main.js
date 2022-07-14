@@ -900,6 +900,7 @@ $(function () {
                 }
             });
 
+            console.log(allViewModels);
             callViewModels(allViewModels, "onAllBound", [allViewModels]);
             log.info("... binding done");
 

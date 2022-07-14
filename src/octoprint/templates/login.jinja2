@@ -1,37 +1,36 @@
-<html>
+<!DOCTYPE html>
+<html lang="en" class="light-style layout-menu-fixed">
 <head>
-    <meta name="viewport" content="width=device-width,initial-scale=1">
-    <title>OctoPrint Login</title>
+    <meta charset="utf-8"/>
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0"/>
+    <title>OctoPrint - Please log in</title>
+    <link rel="icon" type="image/x-icon" href="/static/img/tentacle-20x20.png"/>
+    <link rel="preconnect" href="https://fonts.googleapis.com"/>
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+    <link href="https://fonts.googleapis.com/css2?family=Public+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500;1,600;1,700&display=swap"
+          rel="stylesheet"/>
+    <link rel="stylesheet" href="/static/vendor/fonts/boxicons.css"/>
+    <link rel="stylesheet" href="/static/vendor/css/core.css" class="template-customizer-core-css"/>
+    <link rel="stylesheet" href="/static/vendor/css/theme-default.css" class="template-customizer-theme-css"/>
+    <link rel="stylesheet" href="/static/css/demo.css"/>
+    <link rel="stylesheet" href="/static/vendor/libs/perfect-scrollbar/perfect-scrollbar.css"/>
+    <link rel="stylesheet" href="/static/vendor/css/pages/page-auth.css"/>
+    <style>
+        #login-error,#login-offline{display:none}#login-error.in,#login-offline.in{display:block}
+    </style>
 
-    <link rel="shortcut icon" href="{{ url_for('static', filename='img/tentacle-32x32.png') }}">
-    <link rel="mask-icon" href="{{ url_for('static', filename='img/mask.svg') }}" color="#56BE37">
-    <link rel="mask-icon-theme" href="{{ url_for('static', filename='img/mask-theme.svg') }}" color="#56BE37">
-    <link rel="apple-touch-icon" sizes="114x114" href="{{ url_for('static', filename='img/apple-touch-icon-114x114.png') }}">
-    <link rel="apple-touch-icon" sizes="144x144" href="{{ url_for('static', filename='img/apple-touch-icon-144x144.png') }}">
-
-    <!-- le CSS -->
-
-    <link rel="stylesheet" href="{{ url_for("static", filename="css/bootstrap.min.css") }}">
-    <link rel="stylesheet" href="{{ url_for("static", filename="css/bootstrap-responsive.min.css") }}">
-    <link rel="stylesheet" href="{{ url_for("static", filename="vendor/font-awesome-5.15.1/css/all.min.css") }}">
-    <link rel="stylesheet" href="{{ url_for("static", filename="vendor/font-awesome-5.15.1/css/v4-shims.css") }}">
-    <link rel="stylesheet" href="{{ url_for("static", filename="css/login.css") }}">
-
-    {% for url in theming %}
-        <link rel="stylesheet" href="{{ url }}">
-    {% endfor %}
-
-    <!-- le javascript -->
+    <script src="/static/vendor/js/helpers.js"></script>
+    <script src="{{ url_for("static", filename="js/lib/jquery/jquery.min.js") }}"></script>
+    <script src="{{ url_for("static", filename="js/lib/sockjs.min.js") }}"></script>
+    <script src="{{ url_for("static", filename="js/lib/bootstrap/bootstrap.js") }}"></script>
+    <script src="{{ url_for("static", filename="js/lib/lodash.min.js") }}"></script>
 
     <script>
         var BASE_URL = "{{ url_for('index') }}";
         var REDIRECT_URL = "{{ redirect_url|e }}";
         var USER_ID = "{{ user_id|e }}";
     </script>
-    <script src="{{ url_for("static", filename="js/lib/jquery/jquery.min.js") }}"></script>
-    <script src="{{ url_for("static", filename="js/lib/sockjs.min.js") }}"></script>
-    <script src="{{ url_for("static", filename="js/lib/bootstrap/bootstrap.js") }}"></script>
-    <script src="{{ url_for("static", filename="js/lib/lodash.min.js") }}"></script>
 
     {% assets "js_client" %}
         <script type="text/javascript" src="{{ ASSET_URL }}"></script>
@@ -39,62 +38,72 @@
 
     <script src="{{ url_for("static", filename="js/login/login.js") }}"></script>
 </head>
+
 <body>
-    <noscript>
-        <style type="text/css">
-            #login,
-            #login-overlay {
-                display:none;
-            }
-        </style>
-        <div id="noscript">
-            <div class="wrapper">
-                <div class="outer">
-                    <div class="inner">
-                        <div class="content">
-                            <h1 class="text-error">{{ _('You don\'t seem to have JavaScript enabled') }}</h1>
-                            {{ _('OctoPrint\'s UI requires JavaScript to work. Please enable JavaScript and reload.') }}
+
+<div class="container-xxl">
+    <div class="authentication-wrapper authentication-basic container-p-y">
+        <div class="authentication-inner">
+            <div class="card">
+                <div class="card-body">
+                    <div class="app-brand justify-content-center">
+                        <a href="index.html" class="app-brand-link gap-2">
+                              <span class="app-brand-logo demo">
+                                <img src="/static/img/tentacle-20x20.png" alt="">
+                              </span>
+                            <span class="app-brand-text demo text-body fw-bolder">OctoPrint</span>
+                        </a>
+                    </div>
+
+                    <form class="mb-3 form-signin">
+
+                        <div id="login-error" class="alert alert-error" data-test-id="login-error">{{ _('Incorrect username or password. Hint: Both are case sensitive!') }}</div>
+                        <div id="login-offline" class="alert alert-error">{{ _('Server is currently offline.') }} <a id="login-reconnect" href="javascript:void(0)">{{ _('Reconnect...') }}</a></div>
+
+                        {% if user_id %}<p>
+                            {{ _('The following account is required:') }} {{ user_id|e }}
+                        </p>{% elif logged_in %}<p>
+                            {{ _('An account with the following permissions is required:') }} {{ permission_names|join(", ") }}
+                        </p>{% endif %}
+
+
+                        <div class="mb-3">
+                            <label for="login-user" class="form-label">Username</label>
+                            <input type="text" class="form-control" id="login-user" name="login-user"
+                                   placeholder="{{ _('Username')|edq }}" {% if user_id %}value="{{ user_id|edq }}" disabled{% endif %} autofocus/>
                         </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </noscript>
-
-    <div id="login" class="container">
-        <form class="form-signin">
-            <h2 class="form-signin-heading" data-test-id="login-title">{{ _('Please log in') }}</h2>
-
-            <div id="login-error" class="alert alert-error" data-test-id="login-error">{{ _('Incorrect username or password. Hint: Both are case sensitive!') }}</div>
-            <div id="login-offline" class="alert alert-error">{{ _('Server is currently offline.') }} <a id="login-reconnect" href="javascript:void(0)">{{ _('Reconnect...') }}</a></div>
-
-            {% if user_id %}<p>
-                {{ _('The following account is required:') }} {{ user_id|e }}
-            </p>{% elif logged_in %}<p>
-                {{ _('An account with the following permissions is required:') }} {{ permission_names|join(", ") }}
-            </p>{% endif %}
-
-            <input type="text" id="login-user" data-test-id="login-username" class="input-block-level" placeholder="{{ _('Username')|edq }}" {% if user_id %}value="{{ user_id|edq }}" disabled{% endif %} autofocus autocapitalize="none">
-            <input type="password" id="login-password" data-test-id="login-password" class="input-block-level" placeholder="{{ _('Password')|edq }}">
-            <span class="pull-right"><small><a href="https://faq.octoprint.org/forgotten-password" id="login-forgotpassword" target="_blank" tabindex="-1">{{ _('Forgot password?') }}</a></small></span>
-            <label class="checkbox">
-                <input type="checkbox" id="login-remember" data-test-id="login-remember-me"> {{ _('Remember me') }}
-            </label>
-            <button class="btn btn-block btn-large btn-primary" id="login-button" data-test-id="login-submit" type="submit">{{ _('Log in') }}</button>
-        </form>
-    </div>
-
-    <div id="login-overlay">
-        <div class="background"></div>
-        <div class="wrapper">
-            <div class="outer">
-                <div class="inner">
-                    <div class="content">
-                        <i class="fas fa-spinner fa-spin fa-4x"></i>
-                    </div>
+                        <div class="mb-3 form-password-toggle">
+                            <div class="d-flex justify-content-between">
+                                <label class="form-label" for="login-password">Password</label>
+                            </div>
+                            <div class="input-group input-group-merge">
+                                <input type="password" id="login-password" class="form-control" name="password"
+                                       placeholder="&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;"
+                                       aria-describedby="password"/>
+                                <span class="input-group-text cursor-pointer"><i class="bx bx-hide"></i></span>
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="login-remember"/>
+                                <label class="form-check-label" for="login-remember"> Remember Me </label>
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <button class="btn btn-primary d-grid w-100" id="login-button" type="submit">Sign in</button>
+                        </div>
+                    </form>
                 </div>
             </div>
         </div>
     </div>
+</div>
+
+<script src="/static/vendor/libs/popper/popper.js"></script>
+<script src="/static/vendor/js/bootstrap.js"></script>
+<script src="/static/vendor/libs/perfect-scrollbar/perfect-scrollbar.js"></script>
+<script src="/static/vendor/js/menu.js"></script>
+<script src="/static/vendor/libs/apex-charts/apexcharts.js"></script>
+<script src="/static/js/main.js"></script>
 </body>
 </html>
