@@ -756,6 +756,9 @@ $(function () {
                     var viewModel = viewModelData[0];
                     var targets = viewModelData[1];
 
+                    console.log(viewModel);
+                    console.log(targets);
+
                     if (targets === undefined) {
                         log.error(
                             "No binding targets defined for view model",

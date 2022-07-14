@@ -139,7 +139,7 @@ $(function () {
             var connectionTab = $("#connection");
             if (self.isOperational() && connectionTab.hasClass("in")) {
                 connectionTab.collapse("hide");
-                self.refreshVisible(false);
+                self.refreshVisible(true);
             } else if (!self.isOperational() && !connectionTab.hasClass("in")) {
                 connectionTab.collapse("show");
                 self.refreshVisible(true);
@@ -226,7 +226,7 @@ $(function () {
                 self.refreshVisible(true);
             });
             connectionTab.on("hide", function () {
-                self.refreshVisible(false);
+                self.refreshVisible(true);
             });
         };
 

@@ -127,7 +127,7 @@
                     </a>
                 </li>
                 <li class="menu-item">
-                    <a href="javascript:void(0)" class="menu-link">
+                    <a href="/?force_cache_refresh=true" class="menu-link">
                         <i class="menu-icon tf-icons bx bx-window-open"></i>
                         <div data-i18n="Support">Switch back to old UI</div>
                     </a>
@@ -260,43 +260,13 @@
                                     <div class="card-body">
                                         <h5 class="card-title fw-bold">Connection settings</h5>
                                         <div class="card-text">
-                                            <div class="mb-3">
-                                                <label class="form-label">Serial port</label>
-                                                <select class="form-select" data-bind="options: portOptions, optionsCaption: portCaption, value: selectedPort, css: {disabled: !isErrorOrClosed()}, enable: enablePort()">
-                                                </select>
-                                            </div>
-                                            <div class="mb-3">
-                                                <label class="form-label">Baudrate</label>
-                                                <select class="form-select">
-                                                    <option>Default select</option>
-                                                    <option value="1">One</option>
-                                                    <option value="2">Two</option>
-                                                    <option value="3">Three</option>
-                                                </select>
-                                            </div>
-                                            <div class="mb-3">
-                                                <label class="form-label">Printer Profile</label>
-                                                <select class="form-select">
-                                                    <option>Default select</option>
-                                                    <option value="1">One</option>
-                                                    <option value="2">Two</option>
-                                                    <option value="3">Three</option>
-                                                </select>
-                                            </div>
-                                            <div class="form-check mt-3">
-                                                <input class="form-check-input" type="checkbox">
-                                                <label class="form-check-label">
-                                                    Save connection settings
-                                                </label>
-                                            </div>
-                                            <div class="form-check mt-3">
-                                                <input class="form-check-input" type="checkbox">
-                                                <label class="form-check-label">
-                                                    Auto-connect on server startup
-                                                </label>
-                                            </div>
-                                            <div class="mt-3">
-                                                <button type="button" class="btn btn-dark">Connect</button>
+                                            {% set entry, data = templates.sidebar.entries['connection'] %}
+                                            <div id="{{ data._div }}_wrapper" {% if "data_bind" in data %}data-bind="{{ data.data_bind }}"{% endif %}>
+                                                <div>
+                                                    <div>
+                                                        {% try "There was an error with the template {filename} at line number {lineno}: {exception}" %}{% include data.template ignore missing %}{% endtry %}
+                                                    </div>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
