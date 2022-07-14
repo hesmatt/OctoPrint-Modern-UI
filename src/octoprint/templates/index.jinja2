@@ -181,40 +181,11 @@
                                     <div class="card-body">
                                         <h5 class="card-title fw-bold">Printing statistics</h5>
                                         <div class="card-text">
-                                            <div>
-                                                <h5 class="small fw-bold mb-0">
-                                                    Approx. Total Print Time:
-                                                </h5>
-                                                <div class="mt-1 mb-3">
-                                                    Not calculated...
-                                                </div>
-                                            </div>
-                                            <div>
-                                                <h5 class="small fw-bold mb-0">
-                                                    Print Time: -
-                                                </h5>
-                                                <div class="mt-1 mb-3">
-                                                    Not calculated...
-                                                </div>
-                                            </div>
-                                            <div>
-                                                <h5 class="small fw-bold mb-0">
-                                                    Print Time Left: -
-                                                </h5>
-                                                <div class="mt-1 mb-3">
-                                                    Not calculated...
-                                                </div>
-                                            </div>
-                                            <div>
-                                                <h5 class="small fw-bold mb-0">
-                                                    Printed
-                                                </h5>
-                                                <div class="mt-1">
-                                                    Not calculated...
-                                                </div>
-                                                <div class="mt-1">
-                                                    <div class="progress">
-                                                        <div class="progress-bar" role="progressbar" style="width: 0%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100"></div>
+                                            {% set entry, data = templates.sidebar.entries['state'] %}
+                                            <div id="{{ data._div }}_wrapper" {% if "data_bind" in data %}data-bind="{{ data.data_bind }}"{% endif %}>
+                                                <div>
+                                                    <div>
+                                                        {% try "There was an error with the template {filename} at line number {lineno}: {exception}" %}{% include data.template ignore missing %}{% endtry %}
                                                     </div>
                                                 </div>
                                             </div>

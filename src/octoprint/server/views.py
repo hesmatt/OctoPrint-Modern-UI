@@ -908,13 +908,11 @@ def fetch_template_data(refresh=False):
         },
     }
 
-    # sidebar
-
     templates["sidebar"]["entries"] = {
         "connection": (
             gettext("Connection"),
             {
-                "template": "sidebar/connection.jinja2",
+                "template": "sidebar/connection.jinja2" if request.args.get("newUi") else "sidebar/connection_old.jinja2",
                 "_div": "connection",
                 "icon": "signal",
                 "styles_wrapper": ["display: none;"],
@@ -925,7 +923,7 @@ def fetch_template_data(refresh=False):
         "state": (
             gettext("State"),
             {
-                "template": "sidebar/state.jinja2",
+                "template": "sidebar/state.jinja2" if request.args.get("newUi") else "sidebar/state_old.jinja2",
                 "_div": "state",
                 "icon": "info-circle",
                 "styles_wrapper": ["display: none;"],

@@ -1,0 +1,11 @@
+{% for key in templates.sidebar.order %}
+    {{ templates.sidebar.entries[key]|pprint }}
+    {% set entry, data = templates.sidebar.entries[key] %}
+    <div id="{{ data._div }}_wrapper" {% if "data_bind" in data %}data-bind="{{ data.data_bind }}"{% endif %}>
+        <div>
+            <div>
+                {% try "There was an error with the template {filename} at line number {lineno}: {exception}" %}{% include data.template ignore missing %}{% endtry %}
+            </div>
+        </div>
+    </div>
+{% endfor %}
